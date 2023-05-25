@@ -4,34 +4,49 @@ import { useState, useEffect } from 'react';
 
 
 function App() {
+
+  
+  const [value,setvalue]=useState(false)
+  const Input_Count = () => {
+    const components = [];
+
+    for (let i = 0; i < input; i++) {
+      const temp=[]
+      temp.push(`MyArg${i}`)
+      temp.push(false)
+      id.push(temp)
+      components.push(<Inputcomponent key={i} value={`MyArg${i}`} TrueFalse={TrueFalse} id={id}/>);
+    }
+    return components;
+  };
+
+
+
+
+
+
   const [result, setResult] = useState('undefined');
   const handleResult = (val) => setResult(val)
   const [input, setInput] = useState(1);
   let id = []
-  const [True_OR_False, setTrue_OR_False] = useState(false)
+  // const [True_OR_False, setTrue_OR_False] = useState(false)
   const TrueFalse = (name, val) => {
     for (let i = 0; i < id.length; i++) {
       if (id[i][0] === name) {
         id[i][1] = val
         handleResult(id[i][1]);
+        // console.log(id)
       }
-      console.log(id)
+      // console.log(id)
     }
   }
-  const Input_Count = () => {
-    const components = [];
 
-    for (let i = 0; i < input; i++) {
-      id.push([`MyArg${i}`, false])
-      components.push(<Inputcomponent key={i} value={`MyArg${i}`} TrueFalse={TrueFalse} />);
-    }
-    return components;
-  };
+
 
   const arguementOptions = () => {
     const inputOptions = []
     for (let i = 0; i < id.length; i++) {
-      inputOptions.push(<option key={i} value={id[i]}>{id[i]}</option>);
+      inputOptions.push(<option key={i} value={id[i]} >{id[i]}</option>);
     };
     return inputOptions;
   }
@@ -51,13 +66,32 @@ function App() {
     handleResult('undefined');
   };
   const handleArgue = (event) => {
-    console.log(event.target.value)
+    // console.log(event.target.value)
     for (let i = 0; i < id.length; i++) {
       if (event.target.value === id[i][0]) {
         handleResult(id[i][1]);
       }
     }
   }
+  const handleAnd = (event) => {
+    // console.log(typeOf event.target.value)
+    console.log(typeof event.target.value);
+    // console.log()
+    const ANDcompare = []
+    for (let i = 0; i < id.length; i++) {
+      if (event.target.value === id[i][0]) {
+        ANDcompare.push(id[i][1])
+        // console.log(id[i])
+      }
+    }
+    // console.log(ANDcompare)
+  }
+  // const AndOptions = () =>{
+  //   components=[]
+
+  //   components.push(inputOptions.push(<option key={i} value={id[i]}>{id[i]}</option>));
+  //   components.push(inputOptions.push(<option key={i} value={id[i]}>{id[i]}</option>));
+  // }
   useEffect(() => {
     if (selectedValue === 'constant') {
       // setResult();
@@ -66,9 +100,17 @@ function App() {
       // setResult(argument);
       handleResult(argument)
     }
+    // console.log(id)
   }, [selectedValue, argument]);
 
-  return (
+
+  const inputReset = () =>{
+    // document.getElementById('select').value=""
+    setSelectedValue('')
+    // resetinput=''
+  }
+
+  return (<>
     <div className="App">
       {Input_Count()}
       <button onClick={() => setInput(input + 1)}>+ add arg</button>
@@ -84,6 +126,7 @@ function App() {
       </select>
       {selectedValue === 'constant' && (
         <select name="constSelect" id="constSelect" onChange={handleConst}>
+          <option value="" disabled selected hidden>select...</option>
           <option value="false">false</option>
           <option value="true">true</option>
         </select>
@@ -98,8 +141,26 @@ function App() {
           {arguementOptions()}
         </select>
       )}
+      {selectedValue==='and' && (<>
+        <select name="andSelect" id="andSelect" onChange={handleAnd}>
+        <option value="" disabled selected hidden>
+          select...
+        </option>
+        {arguementOptions()}
+      </select>
+       <select name="andSelect" id="andSelect" onChange={handleAnd}>
+       <option value="" disabled selected hidden>
+         select...
+       </option>
+       {arguementOptions()}
+     </select></>
+      )}
+      <button onClick={inputReset}>X</button>
       <div>result: {result}</div>
     </div>
+
+
+<div>{id}</div></>
   );
 }
 
