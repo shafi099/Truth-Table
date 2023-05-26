@@ -139,20 +139,6 @@ AND_opt2(name);
     }
   };
   
-
-  // const AND_opt2 = (event) => {
-  //   const selectedName = event.target.value;
-  //   setArg2Result(data[selectedName]);
-
-  //   if (arg1Result !== '') {
-  //     if (arg1Result === 'true' && data[selectedName] === 'true') {
-  //       setResult('true');
-  //     } else {
-  //       setResult('false');
-  //     }
-  //   }
-  // };
-
   const OR_opt1 = (event) => {
     if(event.target.value!=''){
     const selectedName = event.target.value;
