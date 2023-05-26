@@ -13,19 +13,17 @@ function App() {
   const [OR1Result, setOR1Result] = useState('');
   const [OR2Result, setOR2Result] = useState('');
 
-  // useEffect(() => {
-  //   console.log(data, 'llll');
-  // }, [data]);
+  useEffect(() => {
+    console.log(data, 'llll');
+  }, [data]);
 
   const truefalse = (name, val) => {
     setData((prevData) => ({
       ...prevData,
       [name]: val,
     }));
-    // console.log(name)
+    inputReset();
     if(selectedValue==='and'){
-      // const selectedName = 'MyArg2';
-      // console.log('called')
 AND_opt1(name);
 AND_opt2(name);
     }
