@@ -1,25 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react';
 
-const Inputcomponent = (props) => {
-    const truefalse = (event) => {
-        // console.group(props.value, event.target.value,props.id)
-        console.log(event.target.value)
-        props.TrueFalse(props.value, event.target.value)
-    }
+const InputComponent = (props) => {
 
+  const changeTrueFalse = (event)=>{
+    const val = event.target.value
+    props.truefalse(props.name,val)
+  }
+  return (
+    <div>
+      <input type="text" defaultValue={props.name} />
+      <select name="TrueFalse" id="TrueFalse" onChange={changeTrueFalse}>
+      <option value="" disabled selected hidden>
+              select...
+            </option>
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+  );
+};
 
-    return (
-        <div>
-            <input type="text" id="ArgName" name={props.name} defaultValue={props.value} onChange={truefalse}/>
-            <select name="TrueFalse" id="TrueFalse" onChange={truefalse}>
-                <option value="" disabled selected hidden>
-                    select...
-                </option>
-                <option value="false">false</option>
-                <option value="true">true</option>
-            </select>
-        </div>
-    )
-}
-
-export default Inputcomponent
+export default InputComponent;

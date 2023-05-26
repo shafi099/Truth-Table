@@ -1,166 +1,212 @@
-import './App.css';
-import Inputcomponent from './components/Inputcomponent';
-import { useState, useEffect } from 'react';
-
+import React, { useEffect, useState } from 'react';
+import InputComponent from './components/Inputcomponent';
+import OptionsComp from './components/OptionsComp';
 
 function App() {
+  const [data, setData] = useState({});
+  const [Input, setInput] = useState(1);
+  const [OutputVal, setOutputVal] = useState(1);
+  const [result, setResult] = useState('');
+  const [selectedValue, setSelectedValue] = useState('');
+  const [arg1Result, setArg1Result] = useState('');
+  const [arg2Result, setArg2Result] = useState('');
+  const [OR1Result, setOR1Result] = useState('');
+  const [OR2Result, setOR2Result] = useState('');
 
-  
-  const [value,setvalue]=useState(false)
+  // useEffect(() => {
+  //   console.log(data, 'llll');
+  // }, [data]);
+
+  const truefalse = (name, val) => {
+    setData((prevData) => ({
+      ...prevData,
+      [name]: val,
+    }));
+    // console.log(name)
+    if(selectedValue==='and'){
+      // const selectedName = 'MyArg2';
+      // console.log('called')
+AND_opt1(name);
+AND_opt2(name);
+    }
+  };
+
   const Input_Count = () => {
     const components = [];
-
-    for (let i = 0; i < input; i++) {
-      const temp=[]
-      temp.push(`MyArg${i}`)
-      temp.push(false)
-      id.push(temp)
-      components.push(<Inputcomponent key={i} value={`MyArg${i}`} TrueFalse={TrueFalse} id={id}/>);
+    for (let i = 0; i < Input; i++) {
+      const name = `My Arg${i}`;
+      const trueFalseValue = data[name];
+      components.push(
+        <InputComponent
+          key={i}
+          name={name}
+          truefalse={truefalse}
+          value={trueFalseValue}
+          result={result}
+          setResult={setResult}
+        />
+      );
     }
     return components;
   };
 
-
-
-
-
-
-  const [result, setResult] = useState('undefined');
-  const handleResult = (val) => setResult(val)
-  const [input, setInput] = useState(1);
-  let id = []
-  // const [True_OR_False, setTrue_OR_False] = useState(false)
-  const TrueFalse = (name, val) => {
-    for (let i = 0; i < id.length; i++) {
-      if (id[i][0] === name) {
-        id[i][1] = val
-        handleResult(id[i][1]);
-        // console.log(id)
-      }
-      // console.log(id)
+  const Options_Count = () => {
+    const components = [];
+    for (let i = 0; i < OutputVal; i++) {
+      components.push(
+        <OptionsComp
+          key={i}
+          handleSelectChange={handleSelectChange}
+          selectedValue={selectedValue}
+          handleConst={handleConst}
+          handleInputArgs={handleInputArgs}
+          AND_opt1={AND_opt1}
+          AND_opt2={AND_opt2}
+          OR_opt1={OR_opt1}
+          OR_opt2={OR_opt2}
+          options={options}
+          inputReset={inputReset}
+        />
+      );
     }
-  }
-
-
-
-  const arguementOptions = () => {
-    const inputOptions = []
-    for (let i = 0; i < id.length; i++) {
-      inputOptions.push(<option key={i} value={id[i]} >{id[i]}</option>);
-    };
-    return inputOptions;
-  }
-
-  const [selectedValue, setSelectedValue] = useState('');
-  const [argument, setArgument] = useState('');
+    return components;
+  };
 
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
-    // setResult();
-    handleResult('undefined');
+  };
+
+  const handleInputArgs = (event) => {
+    const selectedName = event.target.value;
+    const res = data[selectedName] || '';
+    setResult(res);
   };
 
   const handleConst = (event) => {
-    setArgument(event.target.value);
-    setResult('undefined');
-    handleResult('undefined');
+    const selectedName = event.target.value;
+    setResult(data[selectedName]);
   };
-  const handleArgue = (event) => {
-    // console.log(event.target.value)
-    for (let i = 0; i < id.length; i++) {
-      if (event.target.value === id[i][0]) {
-        handleResult(id[i][1]);
+
+  const options = () => {
+    const inputOptions = [];
+    for (const key in data) {
+      inputOptions.push(
+        <option key={key} value={key}>
+          {key}
+        </option>
+      );
+    }
+    return inputOptions;
+  };
+
+  const AND_opt1 = (eventOrSelectedName) => {
+    let selectedName;
+    
+    if (typeof eventOrSelectedName === 'object') {
+      selectedName = eventOrSelectedName.target.value;
+    } else {
+      selectedName = eventOrSelectedName;
+    }
+    
+    setArg1Result(data[selectedName]);
+  
+    if (arg2Result !== '') {
+      if (data[selectedName] === 'true' && arg2Result === 'true') {
+        setResult('true');
+      } else {
+        setResult('false');
+      }
+    }
+  };
+  
+  const AND_opt2 = (eventOrSelectedName) => {
+    let selectedName;
+    
+    if (typeof eventOrSelectedName === 'object') {
+      selectedName = eventOrSelectedName.target.value;
+    } else {
+      selectedName = eventOrSelectedName;
+    }
+    
+    setArg2Result(data[selectedName]);
+  
+    if (arg1Result !== '') {
+      if (arg1Result === 'true' && data[selectedName] === 'true') {
+        setResult('true');
+      } else {
+        setResult('false');
+      }
+    }
+  };
+  
+
+  // const AND_opt2 = (event) => {
+  //   const selectedName = event.target.value;
+  //   setArg2Result(data[selectedName]);
+
+  //   if (arg1Result !== '') {
+  //     if (arg1Result === 'true' && data[selectedName] === 'true') {
+  //       setResult('true');
+  //     } else {
+  //       setResult('false');
+  //     }
+  //   }
+  // };
+
+  const OR_opt1 = (event) => {
+    if(event.target.value!=''){
+    const selectedName = event.target.value;
+    setOR1Result(data[selectedName]);
+
+    if (OR2Result !== '') {
+      if (data[selectedName] === 'true' || OR2Result === 'true') {
+        setResult('true');
+      } else {
+        setResult('false');
+      }
+    }}
+    else{
+      const selectedName = event;
+    setOR1Result(data[selectedName]);
+
+    if (OR2Result !== '') {
+      if (data[selectedName] === 'true' || OR2Result === 'true') {
+        setResult('true');
+      } else {
+        setResult('false');
       }
     }
   }
-  const handleAnd = (event) => {
-    // console.log(typeOf event.target.value)
-    console.log(typeof event.target.value);
-    // console.log()
-    const ANDcompare = []
-    for (let i = 0; i < id.length; i++) {
-      if (event.target.value === id[i][0]) {
-        ANDcompare.push(id[i][1])
-        // console.log(id[i])
+}
+
+  const OR_opt2 = (event) => {
+    const selectedName = event.target.value;
+    setOR2Result(data[selectedName]);
+
+    if (OR1Result !== '') {
+      if (OR1Result === 'true' || data[selectedName] === 'true') {
+        setResult('true');
+      } else {
+        setResult('false');
       }
     }
-    // console.log(ANDcompare)
-  }
-  // const AndOptions = () =>{
-  //   components=[]
+  };
 
-  //   components.push(inputOptions.push(<option key={i} value={id[i]}>{id[i]}</option>));
-  //   components.push(inputOptions.push(<option key={i} value={id[i]}>{id[i]}</option>));
-  // }
-  useEffect(() => {
-    if (selectedValue === 'constant') {
-      // setResult();
-      handleResult(argument)
-    } else if (selectedValue === 'argument' && argument !== '') {
-      // setResult(argument);
-      handleResult(argument)
-    }
-    // console.log(id)
-  }, [selectedValue, argument]);
+  const inputReset = () => {
+    setSelectedValue('');
+    setResult('');
+  };
 
-
-  const inputReset = () =>{
-    // document.getElementById('select').value=""
-    setSelectedValue('')
-    // resetinput=''
-  }
-
-  return (<>
-    <div className="App">
+  return (
+    <>
       {Input_Count()}
-      <button onClick={() => setInput(input + 1)}>+ add arg</button>
+      <button onClick={() => setInput(Input + 1)}>+ add arg</button>
       <br />
-      <select name="select" id="select" onChange={handleSelectChange} value={selectedValue}>
-        <option value="" disabled selected hidden>
-          select...
-        </option>
-        <option value="constant">constant</option>
-        <option value="argument">argument</option>
-        <option value="and">and</option>
-        <option value="or">or</option>
-      </select>
-      {selectedValue === 'constant' && (
-        <select name="constSelect" id="constSelect" onChange={handleConst}>
-          <option value="" disabled selected hidden>select...</option>
-          <option value="false">false</option>
-          <option value="true">true</option>
-        </select>
-      )}
-      {selectedValue === 'argument' && (
-        <select name="argSelect" id="argSelect" onChange={handleArgue}>
-          {/* <option value="false">false</option>
-          <option value="true">true</option> */}
-          <option value="" disabled selected hidden>
-            select...
-          </option>
-          {arguementOptions()}
-        </select>
-      )}
-      {selectedValue==='and' && (<>
-        <select name="andSelect" id="andSelect" onChange={handleAnd}>
-        <option value="" disabled selected hidden>
-          select...
-        </option>
-        {arguementOptions()}
-      </select>
-       <select name="andSelect" id="andSelect" onChange={handleAnd}>
-       <option value="" disabled selected hidden>
-         select...
-       </option>
-       {arguementOptions()}
-     </select></>
-      )}
-      <button onClick={inputReset}>X</button>
-      <div>result: {result}</div>
-    </div>
-
-
-<div>{id}</div></>
+      {Options_Count()}
+      {/* <button onClick={() => setOutputVal(OutputVal + 1)}>+ add op</button> */}
+      <br />
+      <span>result: {result}</span>
+    </>
   );
 }
 
